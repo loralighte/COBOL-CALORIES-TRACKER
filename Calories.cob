@@ -21,11 +21,25 @@
            02 LOG-CaloricCount     PIC 9(3).
            02 LOG-EntryDescription PIC X(50).
        FD CaloricReport.
-       01 RPT-CalorieEntry.
+       01 RPT-Header.
+           02 FILLER               PIC X(5)  VALUE "TIME ".
+           02 FILLER               PIC X(9)  VALUE "CALORIES ".
+           02 FILLER               PIC X(12) VALUE "DESCRIPTION ".
+       02 RPT-LINE.
+           02 FILLER               PIC X(5)  VALUE "-----".
+           02 FILLER               PIC X(3)  VALUE "-+-".
+           02 FILLER               PIC X(9)  VALUE "---------".
+           02 FILLER               PIC X(3)  VALUE "-+-".
+           02 FILLER               PIC X(51) VALUE 
+           "---------------------------------------------------".
+       01 RPT-CalorieEntry.  
            02 RPT-EatenAtTime.
               03 RPT-Hour          PIC 99.
+              03 FILLER            PIC X     VALUE ":".
               03 RPT-Minute        PIC 99.
+           02 FILLER               PIC X(3)  VALUE " | ".
            02 RPT-CaloricCount     PIC 9(3).
+           02 FILLER               PIC X(3)  VALUE " | ".
            02 RPT-EntryDescription PIC X(50).
        WORKING-STORAGE SECTION.   
        01 WS-UserAction.
