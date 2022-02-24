@@ -25,7 +25,7 @@
            02 FILLER               PIC X(5)  VALUE "TIME ".
            02 FILLER               PIC X(9)  VALUE "CALORIES ".
            02 FILLER               PIC X(12) VALUE "DESCRIPTION ".
-       02 RPT-LINE.
+       01 RPT-LINE.
            02 FILLER               PIC X(5)  VALUE "-----".
            02 FILLER               PIC X(3)  VALUE "-+-".
            02 FILLER               PIC X(9)  VALUE "---------".
@@ -46,5 +46,17 @@
        PROCEDURE DIVISION.
            DISPLAY "[1] Create Entry".
            DISPLAY "[2] Create Report".
-
+           ACCEPT WS-UserAction.
+           IF WS-UserAction IS EQUAL TO 1
+              PERFORM 0100-CreateEntry
+           END-IF.
+           IF WS-UserAction IS EQUAL TO 2
+              PERFORM 0200-CreateReport
+           END-IF.
            STOP RUN.
+       
+       0100-CreateEntry.
+           DISPLAY "Create Entry".
+
+       0200-CreateReport.
+           DISPLAY "Creating Report".
