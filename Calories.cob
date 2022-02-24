@@ -24,16 +24,17 @@
       * Logfile file descriptors
        01 FD-CalorieEntry.
            02 FD-EatenAtTime.
-              03 FD-Hour          PIC 99.
-              03 FD-Minute        PIC 99.
-           02 FD-CaloricCount     PIC 9(3).
-           02 FD-EntryDescription PIC X(50).
+              03 FD-Hour           PIC 99.
+              03 FD-Minute         PIC 99.
+           02 FD-CaloricCount      PIC 9(3).
+           02 FD-EntryDescription  PIC X(50).
        FD CaloricReport.
        01 RPT-PrintLine            PIC X(75).
        WORKING-STORAGE SECTION.
       * Generic variables
        01 WS-UserAction            PIC 9.
-       01 WS-LineCount             PIC 99 VALUE ZERO.
+       01 WS-LineCount             PIC 99   VALUE ZERO.
+       01 WS-CaloricTotal          PIC 9(5) VALUE ZERO.
 
       * Report variables
        01 RPT-Heading.
@@ -60,6 +61,10 @@
            02 RPT-CaloricCount     PIC Z(9).
            02 FILLER               PIC X(3)  VALUE " | ".
            02 RPT-EntryDescription PIC X(50).
+       01 RPT-Footer.
+           02 FILLER               PIC X(20)
+              VALUE "Total Calories: ".
+           02 RPT-CaloricTotal     PIC ZZZ,ZZZ.
       
       * Logfile variables
        01 LOG-CalorieEntry.
@@ -113,6 +118,8 @@
                     AT END SET LOG-EndOfFile TO TRUE
                  END-READ.
                  PERFORM 0230-PrintCalorieEntry UNTIL LOG-EndOfFile.
+                 WRITE RPT-PrintLine FROM RPT-Footer AFTER 
+                 ADVANCING 5 LINE.
            CLOSE CaloriesLogfile,CaloricReport.
 
       * Create report title
@@ -129,6 +136,8 @@
            MOVE FD-Hour TO RPT-Hour.
            MOVE FD-Minute TO RPT-Minute.
            MOVE FD-CaloricCount TO RPT-CaloricCount.
+           COMPUTE WS-CaloricTotal = WS-CaloricTotal + FD-CaloricCount.
+           MOVE WS-CaloricTotal TO RPT-CaloricTotal.
            MOVE FD-EntryDescription TO RPT-EntryDescription.
            WRITE RPT-PrintLine FROM RPT-CalorieEntry AFTER 
            ADVANCING 1 LINE.
