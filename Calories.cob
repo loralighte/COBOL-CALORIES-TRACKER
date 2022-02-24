@@ -19,10 +19,9 @@
            02 FD-CaloricCount     PIC 9(3).
            02 FD-EntryDescription PIC X(50).
        WORKING-STORAGE SECTION.   
-       01 WS-CalorieEntry.        
-           02 WS-EatenAtTime.     
-              03 WS-Hour          PIC 99.
-              03 WS-Minute        PIC 99.
-           02 WS-CaloricCount     PIC 9(3).
-           02 WS-EntryDescription PIC X(50).
+       01 WS-UserAction.
        PROCEDURE DIVISION.
+           DISPLAY "[1] Create Entry".
+           DISPLAY "[2] Create Report".
+
+           STOP RUN.
