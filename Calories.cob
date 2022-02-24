@@ -42,7 +42,7 @@
            02 FILLER               PIC X(3)  VALUE " | ".
            02 RPT-EntryDescription PIC X(50).
        WORKING-STORAGE SECTION.   
-       01 WS-UserAction.
+       01 WS-UserAction            PIC 9.
        PROCEDURE DIVISION.
            DISPLAY "[1] Create Entry".
            DISPLAY "[2] Create Report".
