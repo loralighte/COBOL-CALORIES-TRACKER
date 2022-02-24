@@ -1,21 +1,27 @@
-      * ----------------------------------------------------------------
+      * -------------------------------------------------------------- *
        IDENTIFICATION DIVISION. 
        PROGRAM-ID. Caloric-Calculator.
        AUTHOR. Kai Lyons.
-      * ----------------------------------------------------------------
+      * -------------------------------------------------------------- *
        ENVIRONMENT DIVISION. 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL. 
+      *    Logfile
            SELECT CaloriesLogfile ASSIGN TO "calories.log"
            ORGANIZATION IS LINE SEQUENTIAL
            ACCESS IS SEQUENTIAL.
+
+      *    Report File
            SELECT CaloricReport ASSIGN TO "caloric-report.rpt"
            ORGANIZAtION IS LINE SEQUENTIAL.
        DATA DIVISION.
        FILE SECTION. 
        FD CaloriesLogfile.
+      * Logfile write variables
        01 LOG-PrintLine            PIC X(75).
        88 LOG-EndOfFile            VALUE 'Y' FALSE 'N'.
+      
+      * Logfile file descriptors
        01 FD-CalorieEntry.
            02 FD-EatenAtTime.
               03 FD-Hour          PIC 99.
@@ -25,8 +31,11 @@
        FD CaloricReport.
        01 RPT-PrintLine            PIC X(75).
        WORKING-STORAGE SECTION.
+      * Generic variables
        01 WS-UserAction            PIC 9.
        01 WS-LineCount             PIC 99 VALUE ZERO.
+
+      * Report variables
        01 RPT-Heading.
            02 FILLER               PIC X(20) 
               VALUE "Caloric Report For: ".
@@ -51,6 +60,8 @@
            02 RPT-CaloricCount     PIC Z(9).
            02 FILLER               PIC X(3)  VALUE " | ".
            02 RPT-EntryDescription PIC X(50).
+      
+      * Logfile variables
        01 LOG-CalorieEntry.
            02 LOG-EatenAtTime.
               03 LOG-Hour          PIC 99.
@@ -58,17 +69,23 @@
            02 LOG-CaloricCount     PIC 9(3).
            02 LOG-EntryDescription PIC X(50).
        PROCEDURE DIVISION.
+      *    Accept User Action
            DISPLAY "[1] Create Entry".
            DISPLAY "[2] Create Report".
            ACCEPT WS-UserAction.
+      
+      *    User Action: Create Entry
            IF WS-UserAction IS EQUAL TO 1
               PERFORM 0100-CreateEntry
            END-IF.
+
+      *    User Action: Create Report
            IF WS-UserAction IS EQUAL TO 2
               PERFORM 0200-CreateReport
            END-IF.
            STOP RUN.
        
+      * Create logfile and add entry
        0100-CreateEntry.
            DISPLAY "Create Entry".
            OPEN EXTEND CaloriesLogfile.
@@ -83,6 +100,7 @@
               WRITE LOG-PrintLine FROM LOG-CalorieEntry.
            CLOSE CaloriesLogfile.
 
+      * Create the report from the logfile
        0200-CreateReport.
            DISPLAY "Enter name: " WITH NO ADVANCING. 
            ACCEPT RPT-NAME.
@@ -97,13 +115,16 @@
                  PERFORM 0230-PrintCalorieEntry UNTIL LOG-EndOfFile.
            CLOSE CaloriesLogfile,CaloricReport.
 
+      * Create report title
        0210-PrintHeading.
            WRITE RPT-PrintLine FROM RPT-Heading.
        
+      * Print header for entries in report
        0220-PrintValueHeader.
            WRITE RPT-PrintLine FROM RPT-ValueHeader AFTER 3 LINES.
            WRITE RPT-PrintLine FROM RPT-LINE AFTER 1 LINE.
-
+      
+      * Create entries in report
        0230-PrintCalorieEntry.
            MOVE FD-Hour TO RPT-Hour.
            MOVE FD-Minute TO RPT-Minute.
@@ -115,4 +136,3 @@
            READ CaloriesLogfile
               AT END SET LOG-EndOfFile TO TRUE
            END-READ.
-           
