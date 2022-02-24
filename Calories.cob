@@ -57,6 +57,17 @@
        
        0100-CreateEntry.
            DISPLAY "Create Entry".
+           OPEN EXTEND CaloriesLogfile.
+              DISPLAY "What hour was this eaten? (0-59)".
+              ACCEPT LOG-Hour.
+              DISPLAY "What minute of that hour? (0-24)".
+              ACCEPT LOG-Minute.
+              DISPLAY "How many calories? (0-999)".
+              ACCEPT LOG-CaloricCount.
+              DISPLAY "Enter description (Up to 50 characters long)".
+              ACCEPT LOG-EntryDescription.
+              WRITE LOG-CalorieEntry.
+           CLOSE CaloriesLogfile.
 
        0200-CreateReport.
            DISPLAY "Creating Report".
