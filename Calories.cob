@@ -32,7 +32,7 @@
        01 RPT-PrintLine            PIC X(75).
        WORKING-STORAGE SECTION.
       * Generic variables
-       01 WS-UserAction            PIC 9.
+       01 WS-UserAction            PIC X.
        01 WS-LineCount             PIC 99   VALUE ZERO.
        01 WS-CaloricTotal          PIC 9(5) VALUE ZERO.
 
@@ -78,16 +78,14 @@
            DISPLAY "[1] Create Entry".
            DISPLAY "[2] Create Report".
            ACCEPT WS-UserAction.
-      
-      *    User Action: Create Entry
-           IF WS-UserAction IS EQUAL TO 1
-              PERFORM 0100-CreateEntry
-           END-IF.
 
-      *    User Action: Create Report
-           IF WS-UserAction IS EQUAL TO 2
-              PERFORM 0200-CreateReport
-           END-IF.
+      *    Evaluate user action
+           EVALUATE WS-UserAction
+              WHEN '1'
+                 PERFORM 0100-CreateEntry
+              WHEN '2'
+                 PERFORM 0200-CreateReport
+           END-EVALUATE.
            STOP RUN.
        
       * Create logfile and add entry
